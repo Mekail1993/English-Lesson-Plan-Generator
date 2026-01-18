@@ -1,236 +1,43 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Lesson Plan - Mekail Biswas</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&display=swap" rel="stylesheet">
+    <title>English Lesson Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
-        /* General Setup */
-        body, html { 
-            margin: 0; padding: 0; 
-            font-family: 'Segoe UI', sans-serif; 
-            background: #f0f2f5;
-            height: 100%;
+        body {
+            font-family: 'Inter', sans-serif;
         }
-        
-        /* Main Container */
-        .wrapper { 
-            display: flex; 
-            width: 100%; 
-            min-height: 100vh;
+        .title-font {
+            font-family: 'Playfair Display', serif;
         }
-
-        /* Left Sidebar (33%) - Scrollable */
-        .form-side {
-            width: 33%; 
-            background: #ffffff; 
-            padding: 25px;
-            box-sizing: border-box; 
-            border-right: 2px solid #cbd5e1;
-            overflow-y: auto;
-            position: sticky;
-            top: 0;
-            height: 100vh;
-        }
-
-        /* Right Review (67%) - Scrollable */
-        .review-side {
-            width: 67%; 
-            padding: 40px; 
-            box-sizing: border-box;
-            background: #94a3b8; 
-            overflow-y: auto;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* Form Styling */
-        h2 { font-size: 1.1rem; color: #1e40af; border-bottom: 2px solid #1e40af; margin: 20px 0 10px; padding-bottom: 5px; }
-        input, select, textarea {
-            width: 100%; padding: 10px; margin-top: 8px; border: 1px solid #cbd5e1;
-            border-radius: 6px; box-sizing: border-box; font-size: 14px;
-        }
-        textarea { height: 80px; resize: none; }
-        .grid-box { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-
-        /* Lesson Plan Paper Design */
-        .paper {
-            background: white; 
-            width: 100%; 
-            max-width: 800px; 
-            padding: 50px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
-            font-family: 'Tiro Bangla', serif;
-            min-height: 1100px;
-            box-sizing: border-box;
-        }
-        
-        .header-area { text-align: center; margin-bottom: 30px; }
-        .header-area h1 { margin: 0; font-size: 28px; color: #000; text-transform: uppercase; }
-        .header-area p { margin: 5px 0; font-size: 18px; }
-        .sub-title { display: inline-block; margin-top: 15px; border: 2px solid black; padding: 5px 25px; font-weight: bold; font-size: 20px; }
-
-        /* Table Design */
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        table, th, td { border: 1px solid black; }
-        td { padding: 12px; vertical-align: top; line-height: 1.5; color: #000; }
-        .label-cell { font-weight: bold; background: #f9fafb; width: 35%; }
-
-        /* Footer */
-        .copy-footer { text-align: center; margin-top: 50px; font-size: 12px; border-top: 1px solid #eee; padding-top: 15px; font-family: sans-serif; }
-
-        /* Print Button */
-        .print-btn {
-            position: fixed; bottom: 30px; right: 30px; background: #059669;
-            color: white; border: none; padding: 15px 35px; border-radius: 50px;
-            cursor: pointer; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            z-index: 1000;
-        }
-
-        /* Print Settings */
         @media print {
-            .form-side, .print-btn { display: none !important; }
-            .review-side { width: 100% !important; padding: 0 !important; background: white !important; overflow: visible !important; height: auto !important; }
-            .paper { box-shadow: none !important; max-width: 100% !important; padding: 20px !important; }
-            .wrapper { display: block !important; }
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background-color: white !important;
+            }
         }
     </style>
-</head>
-<body>
-
-<div class="wrapper">
-    <aside class="form-side">
-        <h3 style="margin-top:0; color:#2563eb; text-align:center;">Lesson Plan Generator</h3>
-        <p style="text-align:center; font-size:12px; color:#666;">Assistant Teacher, 51 No. Golkhali GPS</p>
-        <hr>
-
-        <h2>School Details</h2>
-        <input type="text" id="inSchool" placeholder="Enter School Name" oninput="sync()">
-        <input type="text" id="inAddress" placeholder="Enter Address (e.g. Koyra, Khulna)" oninput="sync()">
-
-        <h2>Teacher Info</h2>
-        <input type="text" id="inName" placeholder="Teacher's Name" oninput="sync()">
-        <select id="inDesig" onchange="sync()">
-            <option value="Assistant Teacher">Assistant Teacher</option>
-            <option value="Head Teacher">Head Teacher</option>
-        </select>
-
-        <h2>Lesson Introduction</h2>
-        <div class="grid-box">
-            <input type="text" id="inClass" placeholder="Class" oninput="sync()">
-            <input type="text" id="inUnit" placeholder="Unit" oninput="sync()">
-            <input type="text" id="inLesson" placeholder="Lesson" oninput="sync()">
-            <input type="text" id="inSession" placeholder="Session" oninput="sync()">
-            <input type="text" id="inPage" placeholder="Page No" oninput="sync()">
-            <input type="text" id="inDur" placeholder="Duration (min)" oninput="sync()">
-        </div>
-
-        <h2>Step-by-Step Activities</h2>
-        <textarea id="inOutcomes" placeholder="Learning Outcomes" oninput="sync()"></textarea>
-        <textarea id="inAids" placeholder="Teaching Aids" oninput="sync()"></textarea>
-        <textarea id="inIntro" placeholder="Introduction" oninput="sync()"></textarea>
-        <textarea id="inPrior" placeholder="Review of Prior Knowledge (Optional)" oninput="sync()"></textarea>
-        <textarea id="inPrev" placeholder="Review of Previous Session (Optional)" oninput="sync()"></textarea>
-        <textarea id="inPres" placeholder="Presentation of the class" oninput="sync()"></textarea>
-        <textarea id="inPrac" placeholder="Practice Activities" oninput="sync()"></textarea>
-        <textarea id="inAss" placeholder="Assessment Learning" oninput="sync()"></textarea>
-        <textarea id="inHome" placeholder="Homework (Optional)" oninput="sync()"></textarea>
-        <textarea id="inFeed" placeholder="Feedback" oninput="sync()"></textarea>
-        <textarea id="inSum" placeholder="Summary of the session" oninput="sync()"></textarea>
-        <textarea id="inConc" placeholder="Concluding the session" oninput="sync()"></textarea>
-    </aside>
-
-    <main class="review-side">
-        <div class="paper" id="paper-area">
-            <div class="header-area">
-                <h1 id="viewSchool">YOUR SCHOOL NAME</h1>
-                <p id="viewAddress">Address, Location</p>
-                <div class="sub-title">Daily Lesson Plan</div>
-            </div>
-
-            <div style="margin-bottom: 25px; line-height: 1.8;">
-                <strong>Teacher's Name:</strong> <span id="viewName"></span><br>
-                <strong>Designation:</strong> <span id="viewDesig">Assistant Teacher</span>
-            </div>
-
-            <table>
-                <tr>
-                    <td>
-                        <strong>Class:</strong> <span id="viewClass"></span><br>
-                        <strong>Session:</strong> <span id="viewSession"></span><br>
-                        <strong>Session Duration:</strong> <span id="viewDur"></span>
-                    </td>
-                    <td>
-                        <strong>Unit:</strong> <span id="viewUnit"></span><br>
-                        <strong>Lesson:</strong> <span id="viewLesson"></span><br>
-                        <strong>Page No:</strong> <span id="viewPage"></span>
-                    </td>
-                </tr>
-            </table>
-
-            <table>
-                <tr><td colspan="2" class="label-cell">Learning Outcomes:</td></tr>
-                <tr><td colspan="2" id="viewOutcomes"></td></tr>
-                
-                <tr><td colspan="2" class="label-cell">Teaching Aids:</td></tr>
-                <tr><td colspan="2" id="viewAids"></td></tr>
-                
-                <tr style="background:#eeeeee; text-align:center;"><th colspan="2">Teaching Learning Activity</th></tr>
-                
-                <tr><td class="label-cell">Introduction</td><td id="viewIntro"></td></tr>
-                <tr id="rowPrior"><td class="label-cell">Review of Prior Knowledge</td><td id="viewPrior"></td></tr>
-                <tr id="rowPrev"><td class="label-cell">Review of Previous Session</td><td id="viewPrev"></td></tr>
-                <tr><td class="label-cell">Presentation of the class</td><td id="viewPres"></td></tr>
-                <tr><td class="label-cell">Practice Activities</td><td id="viewPrac"></td></tr>
-                <tr><td class="label-cell">Assessment Learning</td><td id="viewAss"></td></tr>
-                <tr id="rowHome"><td class="label-cell">Homework</td><td id="viewHome"></td></tr>
-                <tr><td class="label-cell">Feedback</td><td id="viewFeed"></td></tr>
-                <tr><td class="label-cell">Summary of the session</td><td id="viewSum"></td></tr>
-                <tr><td class="label-cell">Concluding the session</td><td id="viewConc"></td></tr>
-            </table>
-
-            <footer class="copy-footer">&copy; Mekail Biswas 2016</footer>
-        </div>
-    </main>
-</div>
-
-<button class="print-btn" onclick="window.print()">Print / Save PDF</button>
-
-<script>
-    function sync() {
-        const fields = [
-            'inSchool','inAddress','inName','inDesig','inClass','inUnit',
-            'inLesson','inSession','inPage','inDur','inOutcomes','inAids',
-            'inIntro','inPrior','inPrev','inPres','inPrac','inAss','inHome',
-            'inFeed','inSum','inConc'
-        ];
-
-        fields.forEach(id => {
-            const inputVal = document.getElementById(id).value;
-            const viewId = id.replace('in', 'view');
-            const viewElement = document.getElementById(viewId);
-            if(viewElement) {
-                viewElement.innerHTML = inputVal.trim() === "" ? "" : inputVal.replace(/\n/g, '<br>');
-            }
-        });
-
-        // Toggle visibility for Optional Fields
-        toggleRow('inPrior', 'rowPrior');
-        toggleRow('inPrev', 'rowPrev');
-        toggleRow('inHome', 'rowHome');
-    }
-
-    function toggleRow(inputId, rowId) {
-        const val = document.getElementById(inputId).value.trim();
-        document.getElementById(rowId).style.display = (val === "") ? "none" : "table-row";
-    }
-
-    // Initialize on load
-    window.onload = sync;
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.37.0",
+    "html2pdf.js": "https://esm.sh/html2pdf.js@0.10.1"
+  }
+}
 </script>
-
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen">
+    <div id="root"></div>
 </body>
 </html>
+
