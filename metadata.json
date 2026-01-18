@@ -1,0 +1,7 @@
+{
+  "name": "English Lesson Plan Generator",
+  "description": "A sophisticated English daily lesson plan generator for Bangladesh Primary schools, now with Textbook Vision support.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
