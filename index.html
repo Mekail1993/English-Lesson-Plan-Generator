@@ -3,73 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Lesson Plan Generator - Mekail Hossain</title>
+    <title>AI Lesson Plan - Mekail Hossain</title>
     <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #1e40af; --bg: #f8fafc; --border: #cbd5e1; }
-        body, html { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; height: 100vh; overflow: hidden; background: var(--bg); }
-        .wrapper { display: flex; height: 100vh; width: 100%; }
-
-        /* Left Sidebar (33%) */
-        .form-side {
-            width: 33%; background: #ffffff; padding: 20px;
-            box-sizing: border-box; border-right: 2px solid var(--border);
-            overflow-y: auto; height: 100vh;
-        }
-
-        /* Right Preview (67%) */
-        .review-side {
-            width: 67%; padding: 40px; box-sizing: border-box;
-            background: #475569; overflow-y: auto;
-            display: flex; justify-content: center;
-        }
-
-        /* AI Section */
-        .ai-box { background: #eff6ff; padding: 15px; border-radius: 12px; border: 1px solid #3b82f6; margin-bottom: 25px; }
-        .btn-ai { 
-            background: var(--primary); color: white; border: none; padding: 12px; 
-            width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px;
-        }
+        body, html { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; height: 100vh; background: #f1f5f9; }
+        .wrapper { display: flex; height: 100vh; }
+        .form-side { width: 33%; background: white; padding: 20px; border-right: 2px solid #cbd5e1; overflow-y: auto; }
+        .review-side { width: 67%; padding: 30px; background: #475569; overflow-y: auto; display: flex; justify-content: center; }
+        .ai-box { background: #eff6ff; padding: 15px; border-radius: 12px; border: 1px solid #3b82f6; margin-bottom: 20px; }
+        .btn-ai { background: #1e40af; color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; }
         .btn-ai:disabled { background: #94a3b8; }
-
-        /* Inputs */
-        h2 { font-size: 16px; color: var(--primary); border-bottom: 2px solid var(--primary); margin-top: 20px; padding-bottom: 5px; }
-        input, select, textarea {
-            width: 100%; padding: 12px; margin-top: 8px; border: 1px solid var(--border);
-            border-radius: 8px; box-sizing: border-box; font-size: 14px;
-        }
-        textarea { height: 90px; resize: none; }
-
-        /* Paper UI */
-        .paper {
-            background: white; width: 100%; max-width: 800px; padding: 60px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.4); font-family: 'Tiro Bangla', serif;
-            min-height: 1100px; box-sizing: border-box; color: black;
-        }
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { margin: 0; font-size: 28px; }
-        .header p { margin: 5px 0; font-size: 18px; }
-        .plan-tag { display: inline-block; margin-top: 10px; border: 2px solid black; padding: 5px 25px; font-weight: bold; font-size: 20px; }
-
-        /* Table */
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        table, td { border: 1px solid black; }
-        td { padding: 12px; vertical-align: top; line-height: 1.6; font-size: 17px; }
-        .label { font-weight: bold; background: #f1f5f9; width: 30%; }
-
-        .print-btn {
-            position: fixed; bottom: 30px; right: 30px; background: #059669;
-            color: white; border: none; padding: 15px 35px; border-radius: 50px;
-            cursor: pointer; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            z-index: 999;
-        }
-
-        @media print {
-            .form-side, .print-btn { display: none !important; }
-            .review-side { width: 100% !important; padding: 0 !important; background: white !important; overflow: visible !important; }
-            .paper { box-shadow: none !important; border: none !important; width: 100% !important; padding: 30px !important; }
-            .wrapper { display: block !important; }
-        }
+        .paper { background: white; width: 100%; max-width: 800px; padding: 50px; font-family: 'Tiro Bangla', serif; min-height: 1000px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        table, td { border: 1px solid black; padding: 12px; vertical-align: top; }
+        input, textarea { width: 100%; padding: 10px; margin-top: 8px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        textarea { height: 80px; }
+        @media print { .form-side, .btn-ai { display: none; } .review-side { width: 100%; background: white; } .paper { box-shadow: none; } }
     </style>
 </head>
 <body>
@@ -77,31 +26,13 @@
 <div class="wrapper">
     <aside class="form-side">
         <div class="ai-box">
-            <h3 style="margin:0; color:var(--primary);">AI Lesson Assistant</h3>
-            <p style="font-size:12px; margin:5px 0;">টপিক দিন (যেমন: 'Tense' বা 'My Family')</p>
-            <input type="text" id="aiTopic" placeholder="পাঠের নাম লিখুন...">
-            <button class="btn-ai" id="genBtn" onclick="generatePlan()">AI দিয়ে প্ল্যান তৈরি করুন</button>
-            <div id="status" style="font-size:11px; color: var(--primary); margin-top:8px; font-weight:600;"></div>
+            <h3 style="margin:0; color:#1e40af;">AI স্মার্ট লেসন প্ল্যানার</h3>
+            <input type="text" id="aiTopic" placeholder="টপিক লিখুন (যেমন: My School)">
+            <button class="btn-ai" id="genBtn" onclick="generatePlan()">AI দিয়ে তৈরি করুন</button>
+            <div id="status" style="font-size:12px; color: red; margin-top:10px; font-weight: bold;"></div>
         </div>
-
-        <h2>স্কুল ও শিক্ষক</h2>
         <input type="text" id="inSchool" value="৫১নং গোলখালী সরকারি প্রাথমিক বিদ্যালয়" oninput="sync()">
-        <input type="text" id="inAddr" value="কয়রা, খুলনা" oninput="sync()">
         <input type="text" id="inName" value="মো: মিকাইল হোসেন" oninput="sync()">
-        <select id="inDesig" onchange="sync()">
-            <option value="সহকারী শিক্ষক">সহকারী শিক্ষক</option>
-            <option value="প্রধান শিক্ষক">প্রধান শিক্ষক</option>
-        </select>
-
-        <h2>পাঠের তথ্য</h2>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-            <input type="text" id="inClass" placeholder="শ্রেণি" oninput="sync()">
-            <input type="text" id="inUnit" placeholder="Unit" oninput="sync()">
-            <input type="text" id="inLesson" placeholder="Lesson" oninput="sync()">
-            <input type="text" id="inDur" placeholder="সময় (মিনিট)" oninput="sync()">
-        </div>
-
-        <h2>কার্যক্রম</h2>
         <textarea id="inOutcomes" placeholder="Learning Outcomes" oninput="sync()"></textarea>
         <textarea id="inIntro" placeholder="Introduction" oninput="sync()"></textarea>
         <textarea id="inPres" placeholder="Presentation" oninput="sync()"></textarea>
@@ -110,99 +41,44 @@
     </aside>
 
     <main class="review-side">
-        <div class="paper" id="printable-paper">
-            <div class="header">
+        <div class="paper">
+            <div style="text-align:center;">
                 <h1 id="viewSchool">বিদ্যালয়ের নাম</h1>
-                <p id="viewAddr">ঠিকানা</p>
-                <div class="plan-tag">DAILY LESSON PLAN</div>
+                <h3 style="border: 2px solid black; display: inline-block; padding: 5px 20px;">Daily Lesson Plan</h3>
             </div>
-
-            <div style="margin: 20px 0; line-height: 1.8;">
-                <strong>Teacher's Name:</strong> <span id="viewName"></span><br>
-                <strong>Designation:</strong> <span id="viewDesig">সহকারী শিক্ষক</span>
-            </div>
-
+            <p><strong>শিক্ষক:</strong> <span id="viewName"></span></p>
             <table>
-                <tr>
-                    <td><strong>Class:</strong> <span id="viewClass"></span><br><strong>Duration:</strong> <span id="viewDur"></span></td>
-                    <td><strong>Unit:</strong> <span id="viewUnit"></span><br><strong>Lesson:</strong> <span id="viewLesson"></span></td>
-                </tr>
+                <tr><td width="30%">Outcomes</td><td id="viewOutcomes"></td></tr>
+                <tr><td>Introduction</td><td id="viewIntro"></td></tr>
+                <tr><td>Presentation</td><td id="viewPres"></td></tr>
+                <tr><td>Practice</td><td id="viewPrac"></td></tr>
+                <tr><td>Assessment</td><td id="viewAss"></td></tr>
             </table>
-
-            <table>
-                <tr><td class="label">Learning Outcomes</td><td id="viewOutcomes"></td></tr>
-                <tr style="background:#f8fafc;"><th colspan="2" style="padding:10px; border:1px solid black;">Teaching Learning Activities</th></tr>
-                <tr><td class="label">Introduction</td><td id="viewIntro"></td></tr>
-                <tr><td class="label">Presentation</td><td id="viewPres"></td></tr>
-                <tr><td class="label">Practice</td><td id="viewPrac"></td></tr>
-                <tr><td class="label">Assessment</td><td id="viewAss"></td></tr>
-            </table>
-
-            <footer style="text-align:center; margin-top:60px; font-size:12px; color:#444; font-family: sans-serif;">
-                Generated by Mekail Hossain &copy; 2026
-            </footer>
         </div>
     </main>
 </div>
 
-<button class="print-btn" onclick="window.print()">Print Lesson Plan</button>
-
 <script>
+    // আপনার কি-টি এখানে সরাসরি বসিয়ে দিলাম
     const API_KEY = "AIzaSyAjpj1DD5p1BXjYENF94Kg3Bz6S24dty-Q";
 
     function sync() {
-        const ids = ['School', 'Addr', 'Name', 'Desig', 'Class', 'Unit', 'Lesson', 'Dur', 'Outcomes', 'Intro', 'Pres', 'Prac', 'Ass'];
+        const ids = ['School', 'Name', 'Outcomes', 'Intro', 'Pres', 'Prac', 'Ass'];
         ids.forEach(id => {
-            const val = document.getElementById('in' + id).value;
-            const view = document.getElementById('view' + id);
-            if(view) view.innerHTML = val.replace(/\n/g, '<br>');
+            document.getElementById('view' + id).innerText = document.getElementById('in' + id).value;
         });
     }
 
     async function generatePlan() {
         const topic = document.getElementById('aiTopic').value;
-        if(!topic) return alert("টপিকের নাম লিখুন!");
-
-        const btn = document.getElementById('genBtn');
         const status = document.getElementById('status');
+        const btn = document.getElementById('genBtn');
+
+        if(!topic) return alert("টপিক লিখুন!");
+
         btn.disabled = true;
-        status.innerText = "এআই লেসন প্ল্যান তৈরি করছে... অপেক্ষা করুন।";
+        status.style.color = "blue";
+        status.innerText = "এআই আপনার জন্য লিখছে... দয়া করে ১০-১৫ সেকেন্ড অপেক্ষা করুন।";
 
-        const prompt = `Create a professional English lesson plan for primary school on: "${topic}". 
-        Divide strictly into these 5 parts: 1. Outcomes, 2. Introduction, 3. Presentation, 4. Practice, 5. Assessment. 
-        Start each part with labels like "Outcomes:" etc. Use bullet points for outcomes.`;
-
-        try {
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
-                method: "POST",
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({contents: [{parts: [{text: prompt}]}]})
-            });
-            const data = await res.json();
-            const text = data.candidates[0].content.parts[0].text;
-
-            const parse = (label) => {
-                const regex = new RegExp(`${label}:?\\s*([\\s\\S]*?)(?=\\d\\.|Introduction|Presentation|Practice|Assessment|$)`, 'i');
-                return (text.match(regex)?.[1] || "").trim();
-            };
-
-            document.getElementById('inOutcomes').value = parse("Outcomes");
-            document.getElementById('inIntro').value = parse("Introduction");
-            document.getElementById('inPres').value = parse("Presentation");
-            document.getElementById('inPrac').value = parse("Practice");
-            document.getElementById('inAss').value = parse("Assessment");
-
-            sync();
-            status.innerText = "সফলভাবে তৈরি হয়েছে!";
-        } catch (e) {
-            status.innerText = "ভুল হয়েছে! ইন্টারনেট চেক করুন।";
-        }
-        btn.disabled = false;
-    }
-
-    window.onload = sync;
-</script>
-
-</body>
-</html>
+        const prompt = `Create a short primary school English lesson plan on: "${topic}". Response must strictly follow this order:
 
