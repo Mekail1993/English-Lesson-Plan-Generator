@@ -1,43 +1,142 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Lesson Pro</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <title>AI Lesson Plan Generator - Mekail Hossain</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        .title-font {
-            font-family: 'Playfair Display', serif;
-        }
+        body, html { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; height: 100%; overflow: hidden; }
+        .wrapper { display: flex; height: 100vh; }
+        
+        /* Form Section (33%) */
+        .form-side { width: 33%; background: #ffffff; padding: 20px; border-right: 2px solid #ddd; overflow-y: auto; box-sizing: border-box; }
+        .ai-box { background: #eff6ff; padding: 15px; border-radius: 8px; border: 1px solid #3b82f6; margin-bottom: 20px; }
+        input, select, textarea { width: 100%; padding: 8px; margin-top: 8px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 14px; }
+        textarea { height: 70px; }
+        .btn-ai { background: #2563eb; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        
+        /* Review Section (67%) */
+        .review-side { width: 67%; padding: 40px; background: #94a3b8; overflow-y: auto; display: flex; justify-content: center; box-sizing: border-box; }
+        .paper { background: white; width: 100%; max-width: 800px; padding: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); font-family: 'Tiro Bangla', serif; min-height: 1100px; }
+        
+        /* Table Styles */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        table, td { border: 1px solid black; padding: 10px; vertical-align: top; }
+        .label { font-weight: bold; background: #f3f4f6; width: 30%; }
+
         @media print {
-            .no-print {
-                display: none !important;
-            }
-            body {
-                background-color: white !important;
-            }
+            .form-side, .btn-ai, .print-fab { display: none !important; }
+            .review-side { width: 100% !important; background: white !important; overflow: visible !important; }
+            .paper { box-shadow: none !important; padding: 10px !important; }
         }
     </style>
-<script type="importmap">
-{
-  "imports": {
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.37.0",
-    "html2pdf.js": "https://esm.sh/html2pdf.js@0.10.1"
-  }
-}
-</script>
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen">
-    <div id="root"></div>
+<body>
+
+<div class="wrapper">
+    <aside class="form-side">
+        <div class="ai-box">
+            <h3 style="margin:0; color:#1e40af;">AI Smart Planner</h3>
+            <p style="font-size:12px; margin:5px 0;">Topic (যেমন: Tense, My School)</p>
+            <input type="text" id="aiTopic" placeholder="Enter Lesson Topic...">
+            <button class="btn-ai" id="genBtn" onclick="generateWithAI()">Generate Full Plan</button>
+            <p id="status" style="font-size:11px; color: #1e40af; margin-top:5px;"></p>
+        </div>
+
+        <hr>
+        <h2>General Info</h2>
+        <input type="text" id="inSchool" placeholder="School Name" oninput="sync()">
+        <input type="text" id="inName" placeholder="Teacher Name" oninput="sync()">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;">
+            <input type="text" id="inClass" placeholder="Class" oninput="sync()">
+            <input type="text" id="inUnit" placeholder="Unit" oninput="sync()">
+        </div>
+
+        <h2>Activities</h2>
+        <textarea id="inOutcomes" placeholder="Learning Outcomes" oninput="sync()"></textarea>
+        <textarea id="inIntro" placeholder="Introduction" oninput="sync()"></textarea>
+        <textarea id="inPres" placeholder="Presentation" oninput="sync()"></textarea>
+        <textarea id="inPrac" placeholder="Practice" oninput="sync()"></textarea>
+        <textarea id="inAss" placeholder="Assessment" oninput="sync()"></textarea>
+    </aside>
+
+    <main class="review-side">
+        <div class="paper" id="paper">
+            <div style="text-align:center;">
+                <h1 id="viewSchool" style="margin:0;">YOUR SCHOOL NAME</h1>
+                <p>Assistant Teacher, 51 No. Golkhali Govt. Primary School</p>
+                <div style="border:2px solid black; display:inline-block; padding:5px 15px; font-weight:bold; margin-top:10px;">DAILY LESSON PLAN</div>
+            </div>
+
+            <p style="margin-top:20px;"><strong>Teacher:</strong> <span id="viewName"></span></p>
+            <p><strong>Class:</strong> <span id="viewClass"></span> | <strong>Unit:</strong> <span id="viewUnit"></span></p>
+
+            <table>
+                <tr><td class="label">Outcomes</td><td id="viewOutcomes"></td></tr>
+                <tr><td class="label">Introduction</td><td id="viewIntro"></td></tr>
+                <tr><td class="label">Presentation</td><td id="viewPres"></td></tr>
+                <tr><td class="label">Practice</td><td id="viewPrac"></td></tr>
+                <tr><td class="label">Assessment</td><td id="viewAss"></td></tr>
+            </table>
+            <footer style="text-align:center; margin-top:40px; font-size:12px;">&copy; Mekail Hossain 2026</footer>
+        </div>
+    </main>
+</div>
+
+<button onclick="window.print()" class="print-fab" style="position:fixed; bottom:20px; right:20px; background:#10b981; color:white; border:none; padding:15px 25px; border-radius:50px; cursor:pointer; font-weight:bold;">PRINT / SAVE PDF</button>
+
+<script>
+    const MY_API_KEY = "AIzaSyAjpj1DD5p1BXjYENF94Kg3Bz6S24dty-Q"; // আপনার দেওয়া কিটি এখানে সেট করে দিয়েছি
+
+    function sync() {
+        const ids = ['School', 'Name', 'Class', 'Unit', 'Outcomes', 'Intro', 'Pres', 'Prac', 'Ass'];
+        ids.forEach(id => {
+            const val = document.getElementById('in' + id).value;
+            const view = document.getElementById('view' + id);
+            if(view) view.innerHTML = val.replace(/\n/g, '<br>');
+        });
+    }
+
+    async function generateWithAI() {
+        const topic = document.getElementById('aiTopic').value;
+        if(!topic) return alert("Please enter a topic!");
+        
+        const btn = document.getElementById('genBtn');
+        const status = document.getElementById('status');
+        
+        btn.disabled = true;
+        status.innerText = "AI মিকাইল স্যারের জন্য লেসন প্ল্যান লিখছে...";
+
+        const prompt = `Act as an expert English teacher for primary schools in Bangladesh. 
+        Topic: "${topic}". Create a lesson plan. 
+        Respond ONLY in JSON format: {"outcomes": "...", "intro": "...", "presentation": "...", "practice": "...", "assessment": "..."}`;
+
+        try {
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${MY_API_KEY}`, {
+                method: "POST",
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({contents: [{parts: [{text: prompt}]}]})
+            });
+            const data = await res.json();
+            const raw = data.candidates[0].content.parts[0].text.replace(/```json|```/g, "");
+            const result = JSON.parse(raw);
+
+            document.getElementById('inOutcomes').value = result.outcomes;
+            document.getElementById('inIntro').value = result.intro;
+            document.getElementById('inPres').value = result.presentation;
+            document.getElementById('inPrac').value = result.practice;
+            document.getElementById('inAss').value = result.assessment;
+
+            sync();
+            status.innerText = "লেসন প্ল্যান তৈরি সম্পন্ন হয়েছে!";
+        } catch (e) {
+            status.innerText = "ত্রুটি! কিটি আবার চেক করুন।";
+            console.error(e);
+        }
+        btn.disabled = false;
+    }
+</script>
 </body>
 </html>
 
